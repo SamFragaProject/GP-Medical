@@ -1,0 +1,54 @@
+# Multi-stage build para Cloud Run
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Instalar dependencias del sistema necesarias para compilar
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements y instalar dependencias Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Etapa final
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar solo las dependencias runtime necesarias
+RUN apt-get update && apt-get install -y \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar dependencias instaladas desde builder
+COPY --from=builder /root/.local /root/.local
+
+# Asegurar que los scripts en .local están en PATH
+ENV PATH=/root/.local/bin:$PATH
+
+# Copiar código de la aplicación
+COPY . .
+
+# Crear usuario no-root para seguridad
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+USER appuser
+
+# Variables de entorno
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PORT=8080
+
+# Exponer puerto
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8080/health')"
+
+# Comando de inicio
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2

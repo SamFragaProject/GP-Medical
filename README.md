@@ -167,13 +167,35 @@ Los roles son **configurables** y se pueden crear nuevos con permisos personaliz
 
 ## 📈 Despliegue
 
-Ver [DEPLOYMENT.md](./docs/DEPLOYMENT.md) para guías detalladas de despliegue en:
-- Railway
-- Vercel + Render
-- AWS (ECS/RDS)
-- Google Cloud (Cloud Run)
-- DigitalOcean App Platform
-- VPS tradicional
+### 🖥️ Desarrollo Local
+Ver [LOCAL-SETUP.md](./LOCAL-SETUP.md) para configurar el sistema en tu computadora con VSCode.
+
+### ☁️ Producción
+
+**Opciones Recomendadas por Presupuesto:**
+
+#### Opción 1: Railway + Vercel + Supabase ($15-30/mes)
+- ✅ **Más fácil** - Setup en 30 minutos
+- ✅ **Económico** - Ideal para empezar
+- ✅ **PostgreSQL incluido** - Base de datos SQL
+- Ver [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+#### Opción 2: Google Cloud Platform ($25-40/mes)
+- ✅ **Escalable** - Para crecimiento
+- ✅ **Cloud SQL** - PostgreSQL managed
+- ✅ **Cloud Run** - Auto-scaling
+- Ver [DEPLOYMENT-GCP.md](./DEPLOYMENT-GCP.md)
+
+#### Opción 3: Render + Vercel + Supabase ($0-7/mes)
+- ✅ **Más económico** - Free tier disponible
+- ⚠️ **Limitaciones** - Cold starts lentos
+- Ver [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### ⚠️ Nota sobre Firebase
+**Firebase NO tiene base de datos SQL nativa.** Este sistema requiere PostgreSQL.
+- Firebase ofrece Firestore (NoSQL) y Realtime Database (NoSQL)
+- Para usar servicios de Google, ver **Google Cloud Platform** arriba
+- Alternativa: Firebase Hosting (frontend) + Cloud Run (backend) + Cloud SQL
 
 ## 📝 Licencia
 

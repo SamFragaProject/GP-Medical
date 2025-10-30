@@ -1,0 +1,58 @@
+{
+  "recommendations": [
+    // Python
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+
+    // TypeScript / JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // React / Next.js
+    "dsznajder.es7-react-js-snippets",
+    "burkeholland.simple-react-snippets",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+
+    // Database
+    "cweijan.vscode-database-client2",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-pg",
+
+    // API Testing
+    "rangav.vscode-thunder-client",
+    "humao.rest-client",
+
+    // Git
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+
+    // Docker
+    "ms-azuretools.vscode-docker",
+
+    // General
+    "aaron-bond.better-comments",
+    "wayou.vscode-todo-highlight",
+    "gruntfuggly.todo-tree",
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+    "visualstudioexptteam.vscodeintellicode",
+
+    // Markdown
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+
+    // Utilities
+    "alefragnani.bookmarks",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.code-runner",
+    "naumovs.color-highlight",
+
+    // Theme (optional)
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme"
+  ]
+}
