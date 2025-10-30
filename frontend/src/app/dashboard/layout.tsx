@@ -34,6 +34,7 @@ const navigation = [
   { name: "Facturación", href: "/dashboard/facturacion", icon: DollarSign },
   { name: "CRM", href: "/dashboard/crm", icon: Mail },
   { name: "Reportes", href: "/dashboard/reportes", icon: BarChart3 },
+  { name: "Usuarios", href: "/dashboard/usuarios", icon: Users },
   { name: "Configuración", href: "/dashboard/configuracion", icon: Settings },
 ];
 
