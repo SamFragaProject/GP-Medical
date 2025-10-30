@@ -11,7 +11,8 @@ from sqlalchemy.orm import joinedload
 from app.core.database import get_db
 from app.core.security import verify_password, create_access_token, create_refresh_token
 from app.core.config import settings
-from app.models.user import Usuario, Rol, UsuarioRol
+from app.core.deps import get_current_user
+from app.models.user import Usuario, Rol, UsuarioRol, Permiso, RolPermiso
 from app.schemas.auth import Login, Token
 from app.schemas.user import Usuario as UsuarioSchema, UsuarioWithRoles
 
@@ -158,26 +159,52 @@ async def refresh_token(
 
 @router.get("/me", response_model=UsuarioWithRoles)
 async def get_current_user_info(
+    current_user: Usuario = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """
-    Get current user information
-    TODO: Add proper authentication dependency
+    Get current user information with roles and permissions
     """
-    # For now, return mock data
+    # Get user roles
+    roles_result = await db.execute(
+        select(Rol)
+        .join(UsuarioRol)
+        .where(UsuarioRol.usuario_id == current_user.id)
+        .where(Rol.activo == True)
+    )
+    roles = roles_result.scalars().all()
+
+    # Get user permissions through roles
+    permissions_result = await db.execute(
+        select(Permiso)
+        .join(RolPermiso, RolPermiso.permiso_id == Permiso.id)
+        .join(Rol, Rol.id == RolPermiso.rol_id)
+        .join(UsuarioRol, UsuarioRol.rol_id == Rol.id)
+        .where(UsuarioRol.usuario_id == current_user.id)
+        .where(Rol.activo == True)
+    )
+    permissions = permissions_result.scalars().all()
+
     return {
-        "id": 1,
-        "email": "admin@clinica.com",
-        "username": "admin",
-        "nombre": "Administrador",
-        "apellido_paterno": "Sistema",
-        "empresa_id": 1,
-        "is_active": True,
-        "is_superuser": False,
-        "roles": ["ADMIN"],
-        "permisos": [],
-        "created_at": "2024-01-01T00:00:00",
-        "updated_at": "2024-01-01T00:00:00"
+        "id": current_user.id,
+        "email": current_user.email,
+        "username": current_user.username,
+        "nombre": current_user.nombre,
+        "apellido_paterno": current_user.apellido_paterno,
+        "apellido_materno": current_user.apellido_materno,
+        "telefono": current_user.telefono,
+        "celular": current_user.celular,
+        "empresa_id": current_user.empresa_id,
+        "cedula_profesional": current_user.cedula_profesional,
+        "especialidad": current_user.especialidad,
+        "subespecialidad": current_user.subespecialidad,
+        "avatar_url": current_user.avatar_url,
+        "is_active": current_user.is_active,
+        "is_superuser": current_user.is_superuser,
+        "roles": [rol.codigo for rol in roles],
+        "permisos": [permiso.codigo for permiso in permissions],
+        "created_at": current_user.fecha_creacion.isoformat() if current_user.fecha_creacion else None,
+        "updated_at": current_user.fecha_actualizacion.isoformat() if current_user.fecha_actualizacion else None,
     }
 
 
