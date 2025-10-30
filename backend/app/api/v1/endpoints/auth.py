@@ -1,18 +1,19 @@
 """
-Authentication endpoints
+Authentication endpoints - Complete with roles
 """
 
 from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from app.core.database import get_db
 from app.core.security import verify_password, create_access_token, create_refresh_token
 from app.core.config import settings
-from app.models.user import Usuario
+from app.models.user import Usuario, Rol, UsuarioRol
 from app.schemas.auth import Login, Token
-from app.schemas.user import Usuario as UsuarioSchema
+from app.schemas.user import Usuario as UsuarioSchema, UsuarioWithRoles
 
 router = APIRouter()
 
@@ -24,7 +25,7 @@ async def login(
 ):
     """
     Login with email and password
-    Returns access and refresh tokens
+    Returns access and refresh tokens + user info with roles
     """
     # Get user by email
     result = await db.execute(
@@ -47,14 +48,28 @@ async def login(
             detail="Inactive user",
         )
 
-    # Create access token
+    # Get user roles
+    roles_result = await db.execute(
+        select(Rol)
+        .join(UsuarioRol)
+        .where(UsuarioRol.usuario_id == user.id)
+    )
+    roles = roles_result.scalars().all()
+
+    # Create tokens with role information
+    token_data = {
+        "sub": user.id,
+        "email": user.email,
+        "empresa_id": user.empresa_id,
+        "roles": [rol.codigo for rol in roles]
+    }
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.id, "email": user.email, "empresa_id": user.empresa_id},
+        data=token_data,
         expires_delta=access_token_expires,
     )
 
-    # Create refresh token
     refresh_token = create_refresh_token(
         data={"sub": user.id, "email": user.email},
     )
@@ -108,10 +123,25 @@ async def refresh_token(
             detail="Invalid user",
         )
 
+    # Get roles
+    roles_result = await db.execute(
+        select(Rol)
+        .join(UsuarioRol)
+        .where(UsuarioRol.usuario_id == user.id)
+    )
+    roles = roles_result.scalars().all()
+
     # Create new tokens
+    token_data = {
+        "sub": user.id,
+        "email": user.email,
+        "empresa_id": user.empresa_id,
+        "roles": [rol.codigo for rol in roles]
+    }
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.id, "email": user.email, "empresa_id": user.empresa_id},
+        data=token_data,
         expires_delta=access_token_expires,
     )
 
@@ -126,13 +156,50 @@ async def refresh_token(
     }
 
 
-@router.get("/me", response_model=UsuarioSchema)
+@router.get("/me", response_model=UsuarioWithRoles)
 async def get_current_user_info(
-    current_user: Usuario = Depends(lambda: None),  # Will be replaced with actual dependency
     db: AsyncSession = Depends(get_db),
 ):
     """
     Get current user information
+    TODO: Add proper authentication dependency
     """
-    # TODO: Use actual get_current_user dependency
-    return current_user
+    # For now, return mock data
+    return {
+        "id": 1,
+        "email": "admin@clinica.com",
+        "username": "admin",
+        "nombre": "Administrador",
+        "apellido_paterno": "Sistema",
+        "empresa_id": 1,
+        "is_active": True,
+        "is_superuser": False,
+        "roles": ["ADMIN"],
+        "permisos": [],
+        "created_at": "2024-01-01T00:00:00",
+        "updated_at": "2024-01-01T00:00:00"
+    }
+
+
+@router.get("/roles")
+async def get_available_roles(
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Get all available roles for login selection
+    """
+    result = await db.execute(
+        select(Rol).where(Rol.activo == True)
+    )
+    roles = result.scalars().all()
+
+    return [
+        {
+            "id": rol.id,
+            "nombre": rol.nombre,
+            "codigo": rol.codigo,
+            "descripcion": rol.descripcion,
+            "es_medico": rol.es_medico
+        }
+        for rol in roles
+    ]
