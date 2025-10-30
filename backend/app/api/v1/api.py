@@ -13,6 +13,7 @@ from app.api.v1.endpoints import (
     citas,
     encuentros,
     recetas,
+    estudios,
     inventario,
     facturacion,
     crm,
@@ -41,6 +42,7 @@ api_router.include_router(citas.router, prefix="/citas", tags=["Citas"])
 # Clinical
 api_router.include_router(encuentros.router, prefix="/encuentros", tags=["Encuentros Clínicos"])
 api_router.include_router(recetas.router, prefix="/recetas", tags=["Recetas"])
+api_router.include_router(estudios.router, prefix="/estudios", tags=["Órdenes de Estudios"])
 
 # AI Services
 api_router.include_router(ai.router, prefix="/ai", tags=["AI Services"])
