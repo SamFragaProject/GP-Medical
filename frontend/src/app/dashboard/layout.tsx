@@ -21,6 +21,7 @@ import {
   Mail,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ChatbotMedico } from "@/components/ChatbotMedico";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -177,6 +178,9 @@ export default function DashboardLayout({
           <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
+
+      {/* Chatbot Médico Flotante - Disponible en todas las páginas */}
+      <ChatbotMedico />
     </div>
   );
 }

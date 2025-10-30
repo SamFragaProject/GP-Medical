@@ -17,6 +17,7 @@ from app.api.v1.endpoints import (
     facturacion,
     crm,
     upload,
+    ai,
 )
 
 api_router = APIRouter()
@@ -40,6 +41,9 @@ api_router.include_router(citas.router, prefix="/citas", tags=["Citas"])
 # Clinical
 api_router.include_router(encuentros.router, prefix="/encuentros", tags=["Encuentros Clínicos"])
 api_router.include_router(recetas.router, prefix="/recetas", tags=["Recetas"])
+
+# AI Services
+api_router.include_router(ai.router, prefix="/ai", tags=["AI Services"])
 
 # Inventory
 api_router.include_router(inventario.router, prefix="/inventario", tags=["Inventario"])
