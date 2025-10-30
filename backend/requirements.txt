@@ -45,6 +45,9 @@ weasyprint==60.2
 # QR Code Generation
 qrcode[pil]==7.4.2
 
+# Payment Processing
+stripe==8.2.0
+
 # Communications
 emails==0.6
 twilio==8.11.1
