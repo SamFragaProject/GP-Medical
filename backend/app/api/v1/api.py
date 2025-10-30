@@ -17,6 +17,7 @@ from app.api.v1.endpoints import (
     inventario,
     facturacion,
     crm,
+    reportes,
     upload,
     ai,
 )
@@ -55,6 +56,9 @@ api_router.include_router(facturacion.router, prefix="/facturacion", tags=["Fact
 
 # CRM
 api_router.include_router(crm.router, prefix="/crm", tags=["CRM"])
+
+# Reports
+api_router.include_router(reportes.router, prefix="/reportes", tags=["Reportes"])
 
 # File Upload
 api_router.include_router(upload.router, prefix="/upload", tags=["Upload"])
