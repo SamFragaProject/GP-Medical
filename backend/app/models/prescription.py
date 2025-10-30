@@ -52,6 +52,8 @@ class Receta(Base):
 
     # Diagnosis context
     diagnostico = Column(Text)
+    diagnostico_cie10_codigo = Column(String(10))  # Código CIE-10
+    diagnostico_cie10_nombre = Column(String(500))  # Descripción CIE-10
     indicaciones_generales = Column(Text)
 
     # Signature

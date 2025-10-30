@@ -32,6 +32,8 @@ export interface Receta {
   fecha_emision: string;
   fecha_vigencia?: string;
   diagnostico?: string;
+  diagnostico_cie10_codigo?: string;
+  diagnostico_cie10_nombre?: string;
   indicaciones_generales?: string;
   firmada: boolean;
   fecha_firma?: string;
@@ -43,10 +45,19 @@ export interface Receta {
   updated_at: string;
 }
 
+export interface CodigoCIE10 {
+  codigo: string;
+  nombre: string;
+  categoria: string;
+  frecuente: boolean;
+}
+
 export interface RecetaCreate {
   paciente_id: number;
   encuentro_id?: number;
   diagnostico?: string;
+  diagnostico_cie10_codigo?: string;
+  diagnostico_cie10_nombre?: string;
   indicaciones_generales?: string;
   fecha_vigencia?: string;
   detalles: Omit<DetalleReceta, 'id' | 'cantidad_dispensada' | 'dispensada'>[];
@@ -144,6 +155,46 @@ export const recetasService = {
     alergias?: string;
   }): Promise<any> {
     const response = await api.post('/recetas/ai/generate-complete', params);
+    return response.data;
+  },
+
+  // ============================================================================
+  // CIE-10
+  // ============================================================================
+
+  async buscarCIE10(termino: string, limite: number = 20): Promise<{
+    total: number;
+    resultados: CodigoCIE10[];
+  }> {
+    const response = await api.get('/recetas/cie10/buscar', {
+      params: { termino, limite },
+    });
+    return response.data;
+  },
+
+  async obtenerCodigoCIE10(codigo: string): Promise<CodigoCIE10> {
+    const response = await api.get(`/recetas/cie10/codigo/${codigo}`);
+    return response.data;
+  },
+
+  async obtenerCIE10Frecuentes(limite: number = 10): Promise<CodigoCIE10[]> {
+    const response = await api.get('/recetas/cie10/frecuentes', {
+      params: { limite },
+    });
+    return response.data;
+  },
+
+  async obtenerCategoriasCIE10(): Promise<{ categorias: string[] }> {
+    const response = await api.get('/recetas/cie10/categorias');
+    return response.data;
+  },
+
+  async obtenerCIE10PorCategoria(categoria: string): Promise<{
+    categoria: string;
+    total: number;
+    codigos: CodigoCIE10[];
+  }> {
+    const response = await api.get(`/recetas/cie10/categoria/${categoria}`);
     return response.data;
   },
 };

@@ -18,6 +18,13 @@ from app.db.session import get_db
 from app.models.prescription import Receta, DetalleReceta, EstadoReceta
 from app.core.deps import get_current_user
 from app.services.ai_service import ai_service
+from app.data.cie10_catalogo import (
+    buscar_cie10,
+    obtener_por_codigo,
+    obtener_frecuentes,
+    obtener_por_categoria,
+    obtener_categorias,
+)
 
 router = APIRouter()
 
@@ -61,6 +68,8 @@ class RecetaCreate(BaseModel):
     paciente_id: int
     encuentro_id: Optional[int] = None
     diagnostico: Optional[str] = None
+    diagnostico_cie10_codigo: Optional[str] = None  # Código CIE-10
+    diagnostico_cie10_nombre: Optional[str] = None  # Descripción CIE-10
     indicaciones_generales: Optional[str] = None
     fecha_vigencia: Optional[date] = None
     detalles: List[DetalleRecetaCreate] = []
@@ -68,6 +77,8 @@ class RecetaCreate(BaseModel):
 
 class RecetaUpdate(BaseModel):
     diagnostico: Optional[str] = None
+    diagnostico_cie10_codigo: Optional[str] = None
+    diagnostico_cie10_nombre: Optional[str] = None
     indicaciones_generales: Optional[str] = None
     fecha_vigencia: Optional[date] = None
     estado: Optional[EstadoReceta] = None
@@ -85,6 +96,8 @@ class RecetaResponse(BaseModel):
     fecha_emision: date
     fecha_vigencia: Optional[date]
     diagnostico: Optional[str]
+    diagnostico_cie10_codigo: Optional[str] = None
+    diagnostico_cie10_nombre: Optional[str] = None
     indicaciones_generales: Optional[str]
     firmada: bool
     fecha_firma: Optional[datetime]
@@ -213,6 +226,8 @@ async def create_receta(
             fecha_emision=date.today(),
             fecha_vigencia=receta_data.fecha_vigencia,
             diagnostico=receta_data.diagnostico,
+            diagnostico_cie10_codigo=receta_data.diagnostico_cie10_codigo,
+            diagnostico_cie10_nombre=receta_data.diagnostico_cie10_nombre,
             indicaciones_generales=receta_data.indicaciones_generales,
             estado=EstadoReceta.ACTIVA
         )
@@ -479,3 +494,80 @@ async def get_historial_recetas(
     recetas = result.scalars().all()
 
     return recetas
+
+
+# ============================================================================
+# CÓDIGOS CIE-10
+# ============================================================================
+
+@router.get("/cie10/buscar")
+async def buscar_codigos_cie10(
+    termino: str = Query(..., min_length=2, description="Término de búsqueda"),
+    limite: int = Query(20, ge=1, le=100, description="Número máximo de resultados"),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Busca códigos CIE-10 por término
+    Busca en código y descripción
+    """
+    try:
+        resultados = buscar_cie10(termino, limite)
+        return {
+            "total": len(resultados),
+            "resultados": resultados
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error buscando CIE-10: {str(e)}")
+
+
+@router.get("/cie10/codigo/{codigo}")
+async def obtener_codigo_cie10(
+    codigo: str,
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Obtiene un código CIE-10 específico
+    """
+    resultado = obtener_por_codigo(codigo)
+    if not resultado:
+        raise HTTPException(status_code=404, detail=f"Código CIE-10 '{codigo}' no encontrado")
+    return resultado
+
+
+@router.get("/cie10/frecuentes")
+async def obtener_codigos_frecuentes(
+    limite: int = Query(10, ge=1, le=50, description="Número de códigos frecuentes"),
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Obtiene los códigos CIE-10 más frecuentes en Medicina del Trabajo
+    """
+    return obtener_frecuentes(limite)
+
+
+@router.get("/cie10/categorias")
+async def obtener_categorias_cie10(
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Obtiene todas las categorías de CIE-10 disponibles
+    """
+    return {
+        "categorias": obtener_categorias()
+    }
+
+
+@router.get("/cie10/categoria/{categoria}")
+async def obtener_codigos_por_categoria(
+    categoria: str,
+    current_user: dict = Depends(get_current_user),
+):
+    """
+    Obtiene códigos CIE-10 de una categoría específica
+    """
+    resultados = obtener_por_categoria(categoria)
+    return {
+        "categoria": categoria,
+        "total": len(resultados),
+        "codigos": resultados
+    }

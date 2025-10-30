@@ -34,9 +34,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { recetasService, Receta, DetalleReceta } from '@/services/recetas';
+import { recetasService, Receta, DetalleReceta, CodigoCIE10 } from '@/services/recetas';
 import { pacientesService, Paciente } from '@/services/pacientes';
 import { VoiceRecorder } from '@/components/VoiceRecorder';
+import { CIE10Selector } from '@/components/CIE10Selector';
 
 export default function RecetasPage() {
   const [loading, setLoading] = useState(true);
@@ -52,6 +53,9 @@ export default function RecetasPage() {
     indicaciones_generales: '',
     fecha_vigencia: '',
   });
+
+  // Estado para CIE-10
+  const [codigoCIE10Seleccionado, setCodigoCIE10Seleccionado] = useState<CodigoCIE10 | null>(null);
 
   // Estado para el asistente IA de medicamentos
   const [showAIAssistant, setShowAIAssistant] = useState(false);
@@ -260,6 +264,8 @@ export default function RecetasPage() {
       await recetasService.create({
         paciente_id: parseInt(formData.paciente_id),
         diagnostico: formData.diagnostico || undefined,
+        diagnostico_cie10_codigo: codigoCIE10Seleccionado?.codigo || undefined,
+        diagnostico_cie10_nombre: codigoCIE10Seleccionado?.nombre || undefined,
         indicaciones_generales: formData.indicaciones_generales || undefined,
         fecha_vigencia: formData.fecha_vigencia || undefined,
         detalles: medicamentos,
@@ -277,6 +283,7 @@ export default function RecetasPage() {
         fecha_vigencia: '',
       });
       setMedicamentos([]);
+      setCodigoCIE10Seleccionado(null);
     } catch (error) {
       console.error('Error creating receta:', error);
       alert('Error al crear receta');
@@ -386,7 +393,7 @@ export default function RecetasPage() {
               {/* Diagnóstico con Voz */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <Label htmlFor="diagnostico">Diagnóstico</Label>
+                  <Label htmlFor="diagnostico">Diagnóstico (opcional si usa CIE-10)</Label>
                   {!useVoiceForDiagnosis && (
                     <Button
                       variant="outline"
@@ -423,6 +430,16 @@ export default function RecetasPage() {
                     rows={2}
                   />
                 )}
+              </div>
+
+              {/* Selector CIE-10 */}
+              <div className="border-t pt-4">
+                <h3 className="text-sm font-medium mb-3">Código CIE-10 (Recomendado)</h3>
+                <CIE10Selector
+                  onSelect={(codigo) => setCodigoCIE10Seleccionado(codigo)}
+                  valorActual={codigoCIE10Seleccionado}
+                  onClear={() => setCodigoCIE10Seleccionado(null)}
+                />
               </div>
 
               {/* Botón para generar receta completa con IA */}
@@ -743,10 +760,20 @@ export default function RecetasPage() {
                   </div>
                 </div>
 
-                {receta.diagnostico && (
+                {(receta.diagnostico || receta.diagnostico_cie10_codigo) && (
                   <div className="mb-4">
                     <p className="text-sm text-gray-600">Diagnóstico</p>
-                    <p className="text-sm">{receta.diagnostico}</p>
+                    {receta.diagnostico_cie10_codigo && (
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="outline">
+                          {receta.diagnostico_cie10_codigo}
+                        </Badge>
+                        <span className="text-sm">{receta.diagnostico_cie10_nombre}</span>
+                      </div>
+                    )}
+                    {receta.diagnostico && (
+                      <p className="text-sm text-gray-700">{receta.diagnostico}</p>
+                    )}
                   </div>
                 )}
 
