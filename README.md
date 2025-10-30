@@ -191,11 +191,18 @@ Ver [LOCAL-SETUP.md](./LOCAL-SETUP.md) para configurar el sistema en tu computad
 - ⚠️ **Limitaciones** - Cold starts lentos
 - Ver [DEPLOYMENT.md](./DEPLOYMENT.md)
 
-### ⚠️ Nota sobre Firebase
-**Firebase NO tiene base de datos SQL nativa.** Este sistema requiere PostgreSQL.
-- Firebase ofrece Firestore (NoSQL) y Realtime Database (NoSQL)
-- Para usar servicios de Google, ver **Google Cloud Platform** arriba
-- Alternativa: Firebase Hosting (frontend) + Cloud Run (backend) + Cloud SQL
+#### ⭐ Opción 4: Firebase Data Connect (NUEVO - $15-35/mes)
+- ✅ **PostgreSQL integrado** - Firebase ahora soporta SQL
+- ✅ **CDN Global gratis** - Firebase Hosting
+- ✅ **Consola unificada** - Todo desde Firebase Console
+- ✅ **Firebase Auth** - Autenticación opcional integrada
+- Ver [DEPLOYMENT-FIREBASE.md](./DEPLOYMENT-FIREBASE.md)
+
+### 💡 Nota sobre Firebase
+**¡NUEVO!** Firebase Data Connect permite usar PostgreSQL con Firebase.
+- Antes: Solo Firestore (NoSQL) y Realtime Database (NoSQL)
+- Ahora: PostgreSQL a través de Firebase Data Connect
+- Ventaja: CDN global + PostgreSQL + consola unificada
 
 ## 📝 Licencia
 
