@@ -2,22 +2,29 @@
 
 ## ¿ERES NUEVO? → LEE PRIMERO
 
+### ⭐ SI NO ERES PROGRAMADOR (EMPIEZA AQUÍ):
+**Lee:** `SUPER-FACIL.md`
+- SIN palabras técnicas
+- Explicado como si fuera WhatsApp
+- Lenguaje super simple
+- **👉 EMPIEZA AQUÍ SI TE CUESTA ENTENDER**
+
 ### 👉 SI NUNCA HAS USADO CÓDIGO:
 **Lee:** `GUIA-PRINCIPIANTES-COMPLETA.md`
 - Explicación paso a paso
 - TODO explicado desde cero
-- Sin asumir conocimientos previos
+- Con algunos términos técnicos explicados
 
 ### 👉 SI SOLO QUIERES LOS COMANDOS:
 **Lee:** `COMANDOS-EXACTOS.md`
 - Solo los comandos que necesitas
 - Copiar y pegar
-- Sin explicaciones largas
+- Sin explicaciones
 
 ### 👉 SI PREFIERES UN TUTORIAL VISUAL:
 **Lee:** `TUTORIAL-VISUAL.md`
 - Tutorial con "capturas de pantalla" en texto
-- Muestra exactamente qué verás en cada paso
+- Muestra exactamente qué verás
 - Escena por escena
 
 ---
