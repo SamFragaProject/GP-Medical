@@ -1,79 +1,82 @@
 # 🚀 EMPEZAR AQUÍ
 
-## Ejecutar GP-Medical en VSCode
+## ¿ERES NUEVO? → LEE PRIMERO
 
-### ⚡ Inicio Rápido (3 pasos)
+### 👉 SI NUNCA HAS USADO CÓDIGO:
+**Lee:** `GUIA-PRINCIPIANTES-COMPLETA.md`
+- Explicación paso a paso
+- TODO explicado desde cero
+- Sin asumir conocimientos previos
 
-#### 1️⃣ Iniciar Base de Datos
+### 👉 SI SOLO QUIERES LOS COMANDOS:
+**Lee:** `COMANDOS-EXACTOS.md`
+- Solo los comandos que necesitas
+- Copiar y pegar
+- Sin explicaciones largas
 
-**Windows:** Doble click en `start-database.bat`
-**Mac/Linux:** Ejecutar `./start-database.sh`
+### 👉 SI PREFIERES UN TUTORIAL VISUAL:
+**Lee:** `TUTORIAL-VISUAL.md`
+- Tutorial con "capturas de pantalla" en texto
+- Muestra exactamente qué verás en cada paso
+- Escena por escena
 
-#### 2️⃣ Setup Inicial (Solo primera vez)
+---
 
-**Windows:** Doble click en `setup-inicial.bat`
-**Mac/Linux:** Ejecutar `./setup-inicial.sh`
+## ⚡ RESUMEN ULTRA-RÁPIDO
 
-#### 3️⃣ Iniciar Backend y Frontend
+Si ya sabes lo básico:
 
-**Abrir 2 terminales en VSCode:**
-
-**Terminal 1 - Backend:**
+### Primera Vez:
 ```bash
-# Windows:
-start-backend.bat
-
-# Mac/Linux:
-./start-backend.sh
+1. Abrir VSCode en carpeta GP-Medical
+2. Abrir Terminal (Ctrl+Ñ)
+3. cd frontend
+4. npm install
+5. npm run dev
+6. Ir a: http://localhost:3000
 ```
 
-**Terminal 2 - Frontend:**
+### Días Siguientes:
 ```bash
-# Windows:
-start-frontend.bat
-
-# Mac/Linux:
-./start-frontend.sh
+1. Abrir VSCode
+2. Terminal: cd frontend
+3. Terminal: npm run dev
+4. Ir a: http://localhost:3000
 ```
 
-### 🌐 Acceder al Sistema
+---
 
-1. Abrir: **http://localhost:3000**
-2. Login:
-   - Email: **admin@miclinica.com**
-   - Password: **admin123**
+## 📚 Más Recursos
+
+- `GUIA-PRINCIPIANTES-COMPLETA.md` - Guía detallada desde cero
+- `COMANDOS-EXACTOS.md` - Solo comandos, sin explicación
+- `TUTORIAL-VISUAL.md` - Tutorial con imágenes en texto
+- `DESARROLLO-LOCAL-SIMPLE.md` - Guía completa con tips
+- `README-VSC.md` - Documentación técnica completa
 
 ---
 
-## 📚 Documentación Completa
+## 🎯 Lo Que VAS A VER
 
-Ver **README-VSC.md** para:
-- Instrucciones detalladas
-- Troubleshooting
-- Debugging en VSCode
-- Workflow diario
-
----
-
-## ✅ Prerrequisitos
-
-Necesitas tener instalado:
-- Python 3.11+
-- Node.js 18+
-- Docker Desktop
-- VSCode
+Una vez que funcione:
+- Página de login en http://localhost:3000
+- Dashboard del sistema
+- Módulos de pacientes, citas, etc.
 
 ---
 
-## 🎯 Siguiente Paso
+## ⚠️ NOTA IMPORTANTE
 
-Una vez que pruebes el sistema localmente, puedes desplegarlo en:
+Por ahora, solo necesitas el **FRONTEND** funcionando.
 
-- **Railway + Vercel** → `DEPLOYMENT.md`
-- **Firebase Data Connect** → `DEPLOYMENT-FIREBASE.md`
-- **Google Cloud** → `DEPLOYMENT-GCP.md`
-- **Render + Vercel** → `DEPLOYMENT.md`
+El **BACKEND** (base de datos, API) NO es necesario para:
+- Ver la interfaz
+- Hacer cambios visuales
+- Corregir estilos
+- Ajustar textos
+
+Cuando necesites el backend completo (para que funcione el login, etc.), hay guías separadas.
 
 ---
 
-**¿Dudas?** Lee **README-VSC.md** 📖
+**¿Confundido?** → Empieza con `GUIA-PRINCIPIANTES-COMPLETA.md` 📖
