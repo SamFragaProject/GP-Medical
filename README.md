@@ -23,6 +23,40 @@ Sistema integral de gestión clínica multi-empresa con capacidades avanzadas de
 11. **BI y Reportes** - KPIs y análisis
 12. **Procesamiento IA** - Análisis de documentos médicos
 
+## 🔄 Workflow de Desarrollo
+
+### Para Desarrolladores:
+
+```bash
+# 1. Editar en VSCode
+code .
+
+# 2. Ver cambios localmente (opcional)
+cd frontend && npm run dev
+
+# 3. Subir y previsualizar en Vercel
+./deploy-preview.sh "tu cambio"
+
+# 4. Ver preview automático en Vercel
+# URL: https://gp-medical-git-tu-branch.vercel.app
+```
+
+📚 **Guía completa:** [WORKFLOW-DESARROLLO.md](./WORKFLOW-DESARROLLO.md)
+
+### Quickstart Local:
+
+Ver [EMPEZAR-AQUI.md](./EMPEZAR-AQUI.md) o [README-VSC.md](./README-VSC.md)
+
+### Deploy en Vercel:
+
+El frontend se despliega automáticamente:
+- **Push a branch** → Preview deployment
+- **Push a main** → Production deployment
+
+Ver [VERCEL-FACIL.md](./VERCEL-FACIL.md) para configuración.
+
+---
+
 ## 🚀 Stack Tecnológico
 
 ### Backend
